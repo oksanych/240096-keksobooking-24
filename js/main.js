@@ -3,7 +3,9 @@
 function getRandomInRange (min, max){
   if (min < 0 || max < 0 ) {
     return new Error('Min and max value must be more than 0');
-  } else if (min > max){
+  }
+
+  if (min > max){
     [min, max] = [max, min];
   }
 

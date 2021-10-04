@@ -75,7 +75,7 @@ const getRandomInRange = (min, max)=> {
 const getRandomNumber = (min, max)=> Math.floor(getRandomInRange(min, max));
 const getRandomNumberFloatPoint = (min, max, number = 1) =>parseFloat(getRandomInRange(min, max).toFixed(number));
 const getRandomElement = (elements) => elements[getRandomNumber(0, elements.length -1)];
-const getRandomArray = (elements) => elements.slice(0, getRandomNumber(1, elements.length -1));
+const getRandomArray = (elements) => elements.slice(0, getRandomNumber(0, elements.length -1));
 
 const createOffer = () => {
   const locationLat = getRandomNumberFloatPoint(LAT_FROM, LAT_TO, 5);

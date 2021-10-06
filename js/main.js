@@ -3,6 +3,20 @@ const LAT_FROM = 35.65000;
 const LAT_TO = 35.70000;
 const LNG_FROM = 139.70000;
 const LNG_TO = 139.80000;
+
+const ID_PHOTOS = [
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
+  '07',
+  '08',
+  '09',
+  '10',
+];
+
 const TITLES = [
   'Title 1',
   'Title 2',
@@ -27,7 +41,7 @@ const DESCRIPTIONS = [
   'Description 9',
   'Description 10',
 ];
-const TYPE = [
+const TYPES = [
   'palace',
   'flat',
   'house',
@@ -58,8 +72,6 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
-let counter = 0;
-
 const getRandomInRange = (min, max)=> {
   if (min < 0 || max < 0 ) {
     return new Error('Min and max value must be more than 0');
@@ -74,44 +86,44 @@ const getRandomInRange = (min, max)=> {
 
 const getRandomNumber = (min, max)=> Math.floor(getRandomInRange(min, max));
 const getRandomNumberFloatPoint = (min, max, number = 1) =>parseFloat(getRandomInRange(min, max).toFixed(number));
-const getRandomElement = (elements) => elements[getRandomNumber(0, elements.length -1)];
-const getRandomArray = (elements) => elements.slice(0, getRandomNumber(0, elements.length -1));
+const getRandomElement = (elements) => elements[getRandomNumber(0, elements.length)];
+const getShuffledArray = (elements) => {
+  for (let i = elements.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [elements[i], elements[j]] = [elements[j], elements[i]];
+  }
+  return elements;
+};
+const getRandomArray = (elements) => getShuffledArray(elements).slice(0, getRandomNumber(0, elements.length));
 
-const createOffer = () => {
+const createOfferData = () => {
   const locationLat = getRandomNumberFloatPoint(LAT_FROM, LAT_TO, 5);
   const locationLgn = getRandomNumberFloatPoint(LNG_FROM, LNG_TO, 5);
-  let index = 0;
-
-  if (counter < 9){
-    counter += 1;
-    index = `0${ counter.toString()}`;
-  } else {
-    counter += 1;
-    index = counter.toString();
-  }
 
   return {
     author: {
-      avatar: `img/avatars/user${index}.png`,
+      avatar: `img/avatars/user${ID_PHOTOS.shift()}.png`,
     },
     offer: {
       title: getRandomElement(TITLES),
-      address: String(`${locationLat}, ${locationLgn}`),
+      address: `${locationLat}, ${locationLgn}`,
       price: getRandomNumber(0, 1000),
-      type: getRandomElement(TYPE),
+      type: getRandomElement(TYPES),
       rooms: getRandomNumber(0, 100),
       persons: getRandomNumber(0, 100),
-      chechin: getRandomElement(CHECK_IN),
-      chechout: getRandomElement(CHECK_OUT),
-      feature: getRandomArray(FEATURES),
+      checkin: getRandomElement(CHECK_IN),
+      checkout: getRandomElement(CHECK_OUT),
+      features: getRandomArray(FEATURES),
       description: getRandomElement(DESCRIPTIONS),
-      photo: getRandomArray(PHOTOS),
+      photos: getRandomArray(PHOTOS),
     },
-    locations: {
+    location: {
       lat: locationLat,
-      lgn: locationLgn,
+      lng: locationLgn,
     },
   };
 };
 
-Array.from({length: SIMILAR_OFFERS }, createOffer);
+const createOffer = () => Array.from({length: SIMILAR_OFFERS }, createOfferData);
+
+createOffer();

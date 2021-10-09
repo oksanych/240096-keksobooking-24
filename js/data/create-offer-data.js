@@ -11,7 +11,7 @@ import {
   CHECK_OUT,
   FEATURES,
   PHOTOS
-} from '../data/data.js';
+} from '../data/constants.js';
 import {
   getRandomNumber,
   getRandomNumberFloatPoint,

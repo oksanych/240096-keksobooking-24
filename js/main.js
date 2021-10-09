@@ -1,3 +1,3 @@
-import {createOffer} from './utils/create-offer.js';
+import {createOffer} from './data/create-offer.js';
 
 createOffer();

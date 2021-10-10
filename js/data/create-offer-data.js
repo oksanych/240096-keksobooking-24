@@ -11,13 +11,13 @@ import {
   CHECK_OUT,
   FEATURES,
   PHOTOS
-} from '../data/constants.js';
+} from './constants.js';
 import {
   getRandomNumber,
   getRandomNumberFloatPoint,
   getRandomElement,
   getRandomArray
-} from './utils.js';
+} from '../utils/utils.js';
 
 const createOfferData = () => {
   const locationLat = getRandomNumberFloatPoint(LAT_FROM, LAT_TO, 5);

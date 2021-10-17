@@ -102,9 +102,9 @@ const createMapItems = (data) => {
     }
 
     similarListFragment.appendChild(similarMapItem);
-
-    similarMapList.appendChild(similarListFragment);
   });
+
+  similarMapList.appendChild(similarListFragment);
 };
 
 export {

@@ -1,3 +1,4 @@
-import {createOffer} from './data/create-offer.js';
+import { offers } from './data/create-offers.js';
+import { createMapItems} from './create-map-items.js';
 
-createOffer();
+createMapItems(offers);

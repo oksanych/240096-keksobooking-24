@@ -48,6 +48,7 @@ const TYPES = [
   'bungalow',
   'hotel',
 ];
+
 const CHECK_IN = [
   '12:00',
   '13:00',

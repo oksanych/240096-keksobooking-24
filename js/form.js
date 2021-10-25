@@ -70,10 +70,10 @@ inputPrice.addEventListener('input', () => {
 
 doFormDisable(form);
 doFormDisable(filters);
-doFormActive(form);
-doFormActive(filters);
 
 export{
   doFormDisable,
-  doFormActive
+  doFormActive,
+  form,
+  filters
 };

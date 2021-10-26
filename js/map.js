@@ -1,12 +1,16 @@
 import { doFormActive, form, filters } from './form.js';
 import { offers } from './data/create-offers.js';
-import { createMapItems } from './create-map-items.js';
+import { createMapItem } from './create-map-item.js';
 
 const addressField = document.querySelector('#address');
-const tokioCenterCoordinate = {
+const startCoordinate = {
   lat: 35.652832,
   lng: 139.839478,
 };
+const mainPinImg = '../img/main-pin.svg';
+const mainPinIconSize = 52;
+const pinImg = '../img/pin.svg';
+const pinIconSize = 40;
 
 // Function for setting coordinate
 const setCoordinate = ({lat, lng}) => {
@@ -22,9 +26,9 @@ const map = L.map('map-canvas')
     doFormActive(form);
     doFormActive(filters);
     addressField.readOnly = true;
-    setCoordinate(tokioCenterCoordinate);
+    setCoordinate(startCoordinate);
   })
-  .setView(tokioCenterCoordinate, 11);
+  .setView(startCoordinate, 11);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -34,13 +38,13 @@ L.tileLayer(
 ).addTo(map);
 
 const mainPinIcon = L.icon({
-  iconUrl: '../img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconUrl: mainPinImg,
+  iconSize: [mainPinIconSize, mainPinIconSize],
+  iconAnchor: [mainPinIconSize/2, mainPinIconSize],
 });
 
 const markerDefault = L.marker(
-  tokioCenterCoordinate,
+  startCoordinate,
   {
     draggable: true,
     icon: mainPinIcon,
@@ -49,19 +53,19 @@ const markerDefault = L.marker(
 
 markerDefault.addTo(map);
 
-markerDefault.on('moveend', (evt) => {
+markerDefault.on('move', (evt) => {
   setCoordinate(evt.target.getLatLng());
 });
 
 // Setup offers from data
-const createMarker = (array) => {
-  const lat = array.location.lat;
-  const lng = array.location.lng;
+const createMarker = (data) => {
+  const lat = data.location.lat;
+  const lng = data.location.lng;
 
   const icon = L.icon({
-    iconUrl: '../img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconUrl: pinImg,
+    iconSize: [pinIconSize, pinIconSize],
+    iconAnchor: [pinIconSize/2, pinIconSize],
   });
 
   const markerOffer = L.marker(
@@ -76,7 +80,7 @@ const createMarker = (array) => {
 
   markerOffer
     .addTo(map)
-    .bindPopup(createMapItems(array));
+    .bindPopup(createMapItem(data));
 };
 
 offers.forEach((point) => {

@@ -1,12 +1,12 @@
 import { doFormActive, form, filters } from './form.js';
-import { offers } from './data/create-offers.js';
 import { createMapItem } from './create-map-item.js';
 
 const addressField = document.querySelector('#address');
-const startCoordinate = {
+const START_COORDINATE = {
   lat: 35.652832,
   lng: 139.839478,
 };
+const ZOOM = 11;
 const mainPinImg = '../img/main-pin.svg';
 const mainPinIconSize = 52;
 const pinImg = '../img/pin.svg';
@@ -26,9 +26,9 @@ const map = L.map('map-canvas')
     doFormActive(form);
     doFormActive(filters);
     addressField.readOnly = true;
-    setCoordinate(startCoordinate);
+    setCoordinate(START_COORDINATE);
   })
-  .setView(startCoordinate, 11);
+  .setView(START_COORDINATE, 11);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -44,7 +44,7 @@ const mainPinIcon = L.icon({
 });
 
 const markerDefault = L.marker(
-  startCoordinate,
+  START_COORDINATE,
   {
     draggable: true,
     icon: mainPinIcon,
@@ -59,8 +59,7 @@ markerDefault.on('move', (evt) => {
 
 // Setup offers from data
 const createMarker = (data) => {
-  const lat = data.location.lat;
-  const lng = data.location.lng;
+  const {lat, lng} = data.location;
 
   const icon = L.icon({
     iconUrl: pinImg,
@@ -83,6 +82,22 @@ const createMarker = (data) => {
     .bindPopup(createMapItem(data));
 };
 
-offers.forEach((point) => {
-  createMarker(point);
-});
+const renderMap = (data) => {
+  data.forEach((mapItem) => {
+    createMarker(mapItem);
+  });
+};
+
+// Reset map and form
+const clearAll = () => {
+  markerDefault.setLatLng(START_COORDINATE);
+  map.setView(START_COORDINATE, ZOOM);
+  form.reset();
+  map.closePopup();
+  addressField.value = `${START_COORDINATE.lat.toFixed(5)}, ${START_COORDINATE.lng.toFixed(5)}`;
+};
+
+export{
+  renderMap,
+  clearAll
+};

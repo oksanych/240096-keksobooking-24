@@ -1,9 +1,12 @@
+import { sendData } from './api.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MIN_PRICE = 0;
 const MAX_PRICE = 1000000;
 const form = document.querySelector('.ad-form');
 const filters = document.querySelector('.map__filters');
+const resetBtn = document.querySelector('.ad-form__reset');
 const inputTitle = document.querySelector('#title');
 const inputPrice = document.querySelector('#price');
 const inputRoomNumber = document.querySelector('#room_number');
@@ -68,6 +71,27 @@ inputPrice.addEventListener('input', () => {
   inputPrice.reportValidity();
 });
 
+const setFormSubmit = (onSuccess, onFail, clearAll) => {
+  form.addEventListener('submit', (evt) =>{
+    evt.preventDefault();
+
+    sendData(
+      () => onSuccess(),
+      () => onFail(),
+      new FormData(evt.target),
+    );
+
+    clearAll();
+  });
+};
+
+const setReset = (clearAll) => {
+  resetBtn.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    clearAll();
+  });
+};
+
 doFormDisable(form);
 doFormDisable(filters);
 
@@ -75,5 +99,7 @@ export{
   doFormDisable,
   doFormActive,
   form,
-  filters
+  filters,
+  setFormSubmit,
+  setReset
 };

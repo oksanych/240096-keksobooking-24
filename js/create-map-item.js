@@ -10,8 +10,8 @@ const similarMapItemTemplate = document.querySelector('#card').content.querySele
 
 const createMapItem = (data) => {
   const similarMapItem = similarMapItemTemplate.cloneNode(true);
-  const featureClassArray = data.offer.features.map((item) => `popup__feature--${item}`);
   const features = similarMapItem.querySelectorAll('.popup__feature');
+  const featuresWrap = similarMapItem.querySelector('.popup__features');
   const photos = similarMapItem.querySelector('.popup__photos');
   const title = similarMapItem.querySelector('.popup__title');
   const address = similarMapItem.querySelector('.popup__text--address');
@@ -23,14 +23,15 @@ const createMapItem = (data) => {
   const avatar = similarMapItem.querySelector('.popup__avatar');
 
   if(data.offer.features){
+    const featureClassArray = data.offer.features.map((item) => `popup__feature--${item}`);
     features.forEach((item) => {
       const modifier = item.classList[1];
       if(!featureClassArray.includes(modifier)){
         item.remove();
       }
     });
-  } else{
-    features.classList.add('hidden');
+  } else {
+    featuresWrap.classList.add('hidden');
   }
 
   if (data.offer.title) {
@@ -57,8 +58,8 @@ const createMapItem = (data) => {
     type.classList.add('hidden');
   }
 
-  if (data.offer.rooms && data.offer.persons) {
-    capacity.textContent = `${data.offer.rooms} комнаты для ${data.offer.persons} гостей`;
+  if (data.offer.rooms && data.offer.guests) {
+    capacity.textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
   } else {
     capacity.classList.add('hidden');
   }

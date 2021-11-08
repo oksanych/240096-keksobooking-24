@@ -11,6 +11,7 @@ const mainPinImg = '../img/main-pin.svg';
 const mainPinIconSize = 52;
 const pinImg = '../img/pin.svg';
 const pinIconSize = 40;
+const PIN_NUMBER = 10;
 
 // Function for setting coordinate
 const setCoordinate = ({lat, lng}) => {
@@ -83,7 +84,7 @@ const createMarker = (data) => {
 };
 
 const renderMap = (data) => {
-  data.forEach((mapItem) => {
+  data.slice(0, PIN_NUMBER).forEach((mapItem) => {
     createMarker(mapItem);
   });
 };

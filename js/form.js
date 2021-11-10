@@ -103,14 +103,23 @@ const setFormSubmit = () => {
   });
 };
 
-doFormDisable(form);
-doFormDisable(filters);
+const changeStateForm = (isActive) => {
+  if (isActive) {
+    doFormActive(form);
+    doFormActive(filters);
+  } else {
+    doFormDisable(form);
+    doFormDisable(filters);
+  }
+};
+
+changeStateForm(false);
+
 
 export{
-  doFormDisable,
-  doFormActive,
   form,
   filters,
   setFormSubmit,
-  setReset
+  setReset,
+  changeStateForm
 };

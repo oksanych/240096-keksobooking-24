@@ -12,7 +12,6 @@ const PriceRange = {
   LOW: 10000,
   MIDDLE: 50000,
 };
-const DELAY = 500;
 
 const getFilteredOffers = (data) => {
 
@@ -55,10 +54,9 @@ const getFilteredOffers = (data) => {
       .slice(0, 10);
     renderMarkers(filteredData);
 
-    filters.removeEventListener('change', () => debounce(updateFilter(), DELAY));
   };
 
-  filters.addEventListener('change', () => debounce(updateFilter(), DELAY));
+  filters.addEventListener('change', debounce(updateFilter));
 };
 
 export {

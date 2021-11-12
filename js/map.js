@@ -1,4 +1,4 @@
-import { changeStateForm, form, filters, setPricePlaceholder} from './form.js';
+import { changeStateForm, form, filters, setMinPrice} from './form.js';
 import { createMapItemInfo } from './create-map-item.js';
 import { getData } from './api.js';
 import { showAlert } from './utils.js';
@@ -109,7 +109,7 @@ const clearAll = () => {
   filters.reset();
   clearMarkerGroup();
   onDefaultMap();
-  setPricePlaceholder();
+  setMinPrice();
   map.closePopup();
   addressField.value = `${START_COORDINATE.lat.toFixed(5)}, ${START_COORDINATE.lng.toFixed(5)}`;
 };

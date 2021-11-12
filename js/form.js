@@ -26,7 +26,7 @@ const successPopup = document.querySelector('#success').content.querySelector('.
 const errorPopup = document.querySelector('#error').content.querySelector('.error');
 
 // Function for setting placeholder value
-const setPricePlaceholder = () => {
+const setMinPrice = () => {
   const minValue = minPriceList[inputType.value];
   inputPrice.placeholder = minValue;
   inputPrice.min = minValue;
@@ -102,8 +102,7 @@ inputTimeOut.addEventListener('change', () => {
 });
 
 inputType.addEventListener('change', () =>{
-  // minPrice = minPriceList[inputType.value];
-  setPricePlaceholder();
+  setMinPrice();
 });
 
 const setReset = () => {
@@ -152,5 +151,5 @@ export{
   setFormSubmit,
   setReset,
   changeStateForm,
-  setPricePlaceholder
+  setMinPrice
 };

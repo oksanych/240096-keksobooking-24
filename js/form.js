@@ -2,19 +2,34 @@ import { sendData } from './api.js';
 import{ renderPopup } from './pop-up.js';
 import { clearAll } from './map.js';
 
+let minPrice = 0;
+const MinPriceList = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000,
+};
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
-const MIN_PRICE = 0;
 const MAX_PRICE = 1000000;
 const form = document.querySelector('.ad-form');
 const filters = document.querySelector('.map__filters');
 const resetBtn = document.querySelector('.ad-form__reset');
 const inputTitle = document.querySelector('#title');
+const inputType = document.querySelector('#type');
 const inputPrice = document.querySelector('#price');
 const inputRoomNumber = document.querySelector('#room_number');
 const inputCapacity = document.querySelector('#capacity');
+const inputTimeIn = document.querySelector('#timein');
+const inputTimeOut = document.querySelector('#timeout');
 const successPopup = document.querySelector('#success').content.querySelector('.success');
 const errorPopup = document.querySelector('#error').content.querySelector('.error');
+
+// Function for setting placeholder value
+const setPricePlaceholder = () => {
+  inputPrice.placeholder = MinPriceList[inputType.value];
+};
 
 // Function for disable form
 const doFormDisable = (element) => {
@@ -64,15 +79,28 @@ inputTitle.addEventListener('input', () => {
 
 inputPrice.addEventListener('input', () => {
   const priceValue = inputPrice.value;
-  if(priceValue < MIN_PRICE){
-    inputPrice.setCustomValidity(`Цена должна быть больше ${MIN_PRICE} `);
+  if(priceValue < minPrice){
+    inputPrice.setCustomValidity(`Цена должна быть больше ${minPrice} `);
   } else if (priceValue > MAX_PRICE) {
-    inputPrice.setCustomValidity(`Удалите не может быть больше ${MAX_PRICE}`);
+    inputPrice.setCustomValidity(`Цена не может быть больше ${MAX_PRICE}`);
   } else {
     inputPrice.setCustomValidity('');
   }
 
   inputPrice.reportValidity();
+});
+
+inputTimeIn.addEventListener('change', () => {
+  inputTimeOut.value = inputTimeIn.value;
+});
+
+inputTimeOut.addEventListener('change', () => {
+  inputTimeIn.value = inputTimeOut.value;
+});
+
+inputType.addEventListener('change', () =>{
+  minPrice = MinPriceList[inputType.value];
+  setPricePlaceholder();
 });
 
 const setReset = () => {
@@ -115,11 +143,11 @@ const changeStateForm = (isActive) => {
 
 changeStateForm(false);
 
-
 export{
   form,
   filters,
   setFormSubmit,
   setReset,
-  changeStateForm
+  changeStateForm,
+  setPricePlaceholder
 };

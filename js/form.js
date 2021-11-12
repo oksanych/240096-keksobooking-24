@@ -2,8 +2,7 @@ import { sendData } from './api.js';
 import{ renderPopup } from './pop-up.js';
 import { clearAll } from './map.js';
 
-let minPrice = 0;
-const MinPriceList = {
+const minPriceList = {
   bungalow: 0,
   flat: 1000,
   hotel: 3000,
@@ -28,7 +27,9 @@ const errorPopup = document.querySelector('#error').content.querySelector('.erro
 
 // Function for setting placeholder value
 const setPricePlaceholder = () => {
-  inputPrice.placeholder = MinPriceList[inputType.value];
+  const minValue = minPriceList[inputType.value];
+  inputPrice.placeholder = minValue;
+  inputPrice.min = minValue;
 };
 
 // Function for disable form
@@ -79,8 +80,10 @@ inputTitle.addEventListener('input', () => {
 
 inputPrice.addEventListener('input', () => {
   const priceValue = inputPrice.value;
-  if(priceValue < minPrice){
-    inputPrice.setCustomValidity(`Цена должна быть больше ${minPrice} `);
+  const minPriceValue = inputPrice.min;
+
+  if(priceValue < minPriceValue){
+    inputPrice.setCustomValidity(`Цена должна быть больше ${minPriceValue} `);
   } else if (priceValue > MAX_PRICE) {
     inputPrice.setCustomValidity(`Цена не может быть больше ${MAX_PRICE}`);
   } else {
@@ -99,7 +102,7 @@ inputTimeOut.addEventListener('change', () => {
 });
 
 inputType.addEventListener('change', () =>{
-  minPrice = MinPriceList[inputType.value];
+  // minPrice = minPriceList[inputType.value];
   setPricePlaceholder();
 });
 

@@ -1,17 +1,31 @@
-import { doFormActive, form, filters } from './form.js';
-import { createMapItem } from './create-map-item.js';
+import { changeStateForm, form, filters } from './form.js';
+import { createMapItemInfo } from './create-map-item.js';
+import { getData } from './api.js';
+import { showAlert } from './utils.js';
+import { getFilteredOffers } from './filter.js';
 
 const addressField = document.querySelector('#address');
 const START_COORDINATE = {
   lat: 35.652832,
   lng: 139.839478,
 };
+const MAP_TILE = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const MAP_COPYRIGHT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const ZOOM = 11;
-const mainPinImg = '../img/main-pin.svg';
-const mainPinIconSize = 52;
-const pinImg = '../img/pin.svg';
-const pinIconSize = 40;
-const PIN_NUMBER = 10;
+const MAP_MARKER_MAIN = {
+  iconUrl: 'img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchor: [26, 52],
+};
+const MAP_MARKER_DEFAULT = {
+  iconUrl: 'img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+};
+const map = L.map('map-canvas');
+const markerGroup = L.layerGroup();
+
+const MARKER_NUMBER = 10;
 
 // Function for setting coordinate
 const setCoordinate = ({lat, lng}) => {
@@ -21,40 +35,18 @@ const setCoordinate = ({lat, lng}) => {
   addressField.value = `${latItem}, ${lngItem}`;
 };
 
-// Create map
-const map = L.map('map-canvas')
-  .on('load', () => {
-    doFormActive(form);
-    doFormActive(filters);
-    addressField.readOnly = true;
-    setCoordinate(START_COORDINATE);
-  })
-  .setView(START_COORDINATE, 11);
+// Setup main marker
+const mainMarkerIcon = L.icon(MAP_MARKER_MAIN);
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
-
-const mainPinIcon = L.icon({
-  iconUrl: mainPinImg,
-  iconSize: [mainPinIconSize, mainPinIconSize],
-  iconAnchor: [mainPinIconSize/2, mainPinIconSize],
-});
-
-const markerDefault = L.marker(
+const markerMain = L.marker(
   START_COORDINATE,
   {
     draggable: true,
-    icon: mainPinIcon,
+    icon: mainMarkerIcon,
   },
 );
 
-markerDefault.addTo(map);
-
-markerDefault.on('move', (evt) => {
+markerMain.on('move', (evt) => {
   setCoordinate(evt.target.getLatLng());
 });
 
@@ -62,13 +54,9 @@ markerDefault.on('move', (evt) => {
 const createMarker = (data) => {
   const {lat, lng} = data.location;
 
-  const icon = L.icon({
-    iconUrl: pinImg,
-    iconSize: [pinIconSize, pinIconSize],
-    iconAnchor: [pinIconSize/2, pinIconSize],
-  });
+  const icon = L.icon(MAP_MARKER_DEFAULT);
 
-  const markerOffer = L.marker(
+  L.marker(
     {
       lat,
       lng,
@@ -76,29 +64,58 @@ const createMarker = (data) => {
     {
       icon,
     },
-  );
-
-  markerOffer
-    .addTo(map)
-    .bindPopup(createMapItem(data));
+  ).addTo(markerGroup).bindPopup(createMapItemInfo(data));
 };
 
-const renderMap = (data) => {
-  data.slice(0, PIN_NUMBER).forEach((mapItem) => {
-    createMarker(mapItem);
-  });
+const clearMarkerGroup = () => markerGroup.clearLayers();
+
+const renderMarkers = (data) => {
+  data.forEach((item) => createMarker(item));
 };
+
+const onMapLoad = (data) => {
+  renderMarkers(data.slice(0, MARKER_NUMBER));
+  getFilteredOffers(data);
+};
+
+const onDefaultMap = () => {
+  getData(onMapLoad, showAlert);
+  setCoordinate(START_COORDINATE);
+  changeStateForm(true);
+};
+
+// Create map
+map.on('load', () => {
+  addressField.readOnly = true;
+  onDefaultMap();
+}).setView(START_COORDINATE, 11);
+
+markerGroup.addTo(map);
+
+L.tileLayer(
+  MAP_TILE,
+  {
+    attribution: MAP_COPYRIGHT,
+  },
+).addTo(map);
+
+markerMain.addTo(map);
 
 // Reset map and form
 const clearAll = () => {
-  markerDefault.setLatLng(START_COORDINATE);
+  markerMain.setLatLng(START_COORDINATE);
   map.setView(START_COORDINATE, ZOOM);
   form.reset();
+  filters.reset();
+  clearMarkerGroup();
+  onDefaultMap();
   map.closePopup();
   addressField.value = `${START_COORDINATE.lat.toFixed(5)}, ${START_COORDINATE.lng.toFixed(5)}`;
 };
 
 export{
-  renderMap,
-  clearAll
+  renderMarkers,
+  clearAll,
+  createMarker,
+  clearMarkerGroup
 };

@@ -8,7 +8,7 @@ const typesDictionary = {
 
 const similarMapItemTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-const createMapItem = (data) => {
+const createMapItemInfo = (data) => {
   const similarMapItem = similarMapItemTemplate.cloneNode(true);
   const features = similarMapItem.querySelectorAll('.popup__feature');
   const featuresWrap = similarMapItem.querySelector('.popup__features');
@@ -103,6 +103,6 @@ const createMapItem = (data) => {
 };
 
 export {
-  createMapItem
+  createMapItemInfo
 };
 

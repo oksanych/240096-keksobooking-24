@@ -3,6 +3,7 @@ import { createMapItemInfo } from './create-map-item.js';
 import { getData } from './api.js';
 import { showAlert } from './utils.js';
 import { getFilteredOffers } from './filter.js';
+import { roomPreview } from './picture.js';
 
 const addressField = document.querySelector('#address');
 const START_COORDINATE = {
@@ -78,7 +79,7 @@ const onMapLoad = (data) => {
   getFilteredOffers(data);
 };
 
-const onDefaultMap = () => {
+const setDefaultMap = () => {
   getData(onMapLoad, showAlert);
   setCoordinate(START_COORDINATE);
   changeStateForm(true);
@@ -87,7 +88,7 @@ const onDefaultMap = () => {
 // Create map
 map.on('load', () => {
   addressField.readOnly = true;
-  onDefaultMap();
+  setDefaultMap();
 }).setView(START_COORDINATE, 11);
 
 markerGroup.addTo(map);
@@ -108,13 +109,14 @@ const clearAll = () => {
   form.reset();
   filters.reset();
   clearMarkerGroup();
-  onDefaultMap();
+  setDefaultMap();
   setMinPrice();
   map.closePopup();
+  roomPreview.innerHTML = '';
   addressField.value = `${START_COORDINATE.lat.toFixed(5)}, ${START_COORDINATE.lng.toFixed(5)}`;
 };
 
-export{
+export {
   renderMarkers,
   clearAll,
   createMarker,

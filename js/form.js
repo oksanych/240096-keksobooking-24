@@ -145,7 +145,7 @@ const changeStateForm = (isActive) => {
 
 changeStateForm(false);
 
-export{
+export {
   form,
   filters,
   setFormSubmit,

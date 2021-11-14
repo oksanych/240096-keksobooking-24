@@ -39,11 +39,9 @@ const getFilteredOffers = (data) => {
   const filterFeatures = (item) => {
     const checkedHousingFeatures = filterFeaturesControl.querySelectorAll('.map__checkbox:checked');
 
-    return Array.from(checkedHousingFeatures).every((checkedFeature) => {
-      if (item.offer.features) {
-        return item.offer.features.includes(checkedFeature.value);
-      }
-    });
+    return Array.from(checkedHousingFeatures).every((checkedFeature) =>
+      item.offer.features && item.offer.features.includes(checkedFeature.value),
+    );
   };
 
   const updateFilter = () => {
